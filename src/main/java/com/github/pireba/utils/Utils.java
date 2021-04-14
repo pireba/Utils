@@ -89,6 +89,12 @@ public class Utils {
 		return loader.load();
 	}
 	
+	public static <T> T loadFXMLAsRoot(final Object controller) throws IOException {
+		Class<?> clazz = controller.getClass();
+		URL url = clazz.getResource(clazz.getSimpleName()+".fxml");
+		return Utils.loadFXMLAsRoot(url, controller);
+	}
+	
 	public static <T> T loadFXMLAsRoot(final URL url, final Object controller) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(controller);
