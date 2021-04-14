@@ -21,16 +21,7 @@ public class AlertHandler extends Handler {
 		
 		Alert alert = this.getAlert(record);
 		alert.showAndWait();
-	}
-	
-	@Override
-	public void flush() {
-		
-	}
-	
-	@Override
-	public void close() throws SecurityException {
-		
+		this.flush();
 	}
 	
 	private Alert getAlert(LogRecord record) {
@@ -61,5 +52,15 @@ public class AlertHandler extends Handler {
 		alert.getDialogPane().setExpandableContent(vbox);
 		
 		return alert;
+	}
+	
+	@Override
+	public void flush() {
+		
+	}
+	
+	@Override
+	public void close() {
+		
 	}
 }

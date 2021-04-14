@@ -78,24 +78,21 @@ public class Utils {
 	public static <T> T loadFXML(final Object controller) throws IOException {
 		Class<?> clazz = controller.getClass();
 		URL url = clazz.getResource(clazz.getSimpleName()+".fxml");
-		String path = url.getPath();
-		return Utils.loadFXML(path, controller);
+		return Utils.loadFXML(url, controller);
 	}
 	
-	public static <T> T loadFXML(final String path, final Object controller) throws IOException {
+	public static <T> T loadFXML(final URL url, final Object controller) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(controller);
-		loader.setLocation(Utils.class.getResource(path));
-		loader.setResources(I18N.getResourceBundle());
+		loader.setLocation(url);
 		
 		return loader.load();
 	}
 	
-	public static <T> T loadFXMLAsRoot(final String path, final Object controller) throws IOException {
+	public static <T> T loadFXMLAsRoot(final URL url, final Object controller) throws IOException {
 		FXMLLoader loader = new FXMLLoader();
 		loader.setController(controller);
-		loader.setLocation(Utils.class.getResource(path));
-		loader.setResources(I18N.getResourceBundle());
+		loader.setLocation(url);
 		loader.setRoot(controller);
 		
 		return loader.load();

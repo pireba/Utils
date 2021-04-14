@@ -1,8 +1,6 @@
 package com.github.pireba.utils;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -12,47 +10,50 @@ import javafx.beans.property.SimpleObjectProperty;
 public class I18N {
 	
 	private static final Locale DEFAULT_LOCALE = Locale.US;
-	private static final ObjectProperty<Locale> LOCALE = new SimpleObjectProperty<Locale>(getDefaultLocale());
-	static {
-		LOCALE.addListener((observable, oldValue, newValue) -> {
+	
+	private final ResourceBundle bundle;
+	private final ObjectProperty<Locale> locale = new SimpleObjectProperty<>(DEFAULT_LOCALE);
+	
+	public I18N(final String bundle) {
+		this(ResourceBundle.getBundle(bundle));
+	}
+	
+	public I18N(final String bundle, final Locale locale) {
+		this(ResourceBundle.getBundle(bundle, locale));
+	}
+	
+	public I18N(final ResourceBundle bundle) {
+		this.bundle = bundle;
+		this.locale.addListener((observable, oldValue, newValue) -> {
 			Locale.setDefault(newValue);
 		});
 	}
 	
-	public static List<Locale> getSupportedLocales() {
-		List<Locale> list = new ArrayList<>();
-		list.add(Locale.GERMANY);
-		list.add(DEFAULT_LOCALE);
-		return list;
+	public Locale getDefaultLocale() {
+		return DEFAULT_LOCALE;
 	}
 	
-	public static Locale getDefaultLocale() {
-		Locale locale = Locale.getDefault();
-		
-		if ( getSupportedLocales().contains(locale) ) {
-			return locale;
-		} else {
-			return DEFAULT_LOCALE;
-		}
+	public Locale getLocale() {
+		return this.locale.get();
 	}
 	
-	public static Locale getLocale() {
-		return LOCALE.get();
+	public void setLocale(Locale locale) {
+		this.locale.set(locale);
 	}
 	
-	public static void setLocale(Locale locale) {
-		LOCALE.set(locale);
+	public ObjectProperty<Locale> localeProperty() {
+		return this.locale;
 	}
 	
-	public static ObjectProperty<Locale> localeProperty() {
-		return LOCALE;
+	public String get(final String key, final Object... args) {
+		return this.getMessage(key, args);
 	}
 	
-	public static ResourceBundle getResourceBundle() {
-		return ResourceBundle.getBundle("i18n/iTunes-Renamer", getLocale());
+	public String getMessage(final String key, final Object... args) {
+		return MessageFormat.format(this.bundle.getString(key), args);
 	}
 	
-	public static String get(final String key, final Object... args) {
-		return MessageFormat.format(getResourceBundle().getString(key), args);
+	public ResourceBundle getResourceBundle() {
+		return this.bundle;
 	}
 }
