@@ -104,10 +104,22 @@ public class Utils {
 		return loader.load();
 	}
 	
-	public static void loadLoggingProperties() throws SecurityException, IOException {
-		if ( System.getProperty("java.util.logging.config.file") == null ) {
-			LogManager.getLogManager().readConfiguration(Utils.class.getResource("/logging.properties").openStream());
+	public static void loadLoggingProperties() throws IOException {
+		loadLoggingProperties("/logging.properties");
+	}
+	
+	public static void loadLoggingProperties(String resource) throws IOException {
+		if ( System.getProperty("java.util.logging.config.file") != null ) {
+			return;
 		}
+		
+		URL url = Utils.class.getResource(resource);
+		
+		if ( url == null ) {
+			throw new IOException("The file could not be found.");
+		}
+		
+		LogManager.getLogManager().readConfiguration(url.openStream());
 	}
 	
 	public static String toTitleCase(String currentName) {

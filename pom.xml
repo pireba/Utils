@@ -43,8 +43,8 @@
 		<url>https://github.com/pireba/Utils</url>
 		<connection>scm:git:https://github.com/pireba/Utils.git</connection>
 		<developerConnection>scm:git:https://github.com/pireba/Utils.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 			
 	<properties>
 		<project.scm.id>github</project.scm.id>
