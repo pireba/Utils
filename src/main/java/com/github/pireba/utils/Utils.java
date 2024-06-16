@@ -2,18 +2,23 @@ package com.github.pireba.utils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.function.UnaryOperator;
 import java.util.logging.LogManager;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory;
-import javafx.scene.control.TextFormatter;
-import javafx.util.converter.IntegerStringConverter;
 
+/**
+ * A collection of utility functions.
+ * 
+ * @author Phillip Remmert
+ */
 public class Utils {
 	
 	private Utils() {}
 	
+	/**
+	 * Returns the first non-null value in a list of values.
+	 * 
+	 * @param values The list of values.
+	 * @return The first non-null value.
+	 */
 	@SafeVarargs
 	public static <T> T coalesce(final T... values) {
 		if ( values != null ) {
@@ -27,87 +32,67 @@ public class Utils {
 		return null;
 	}
 	
-	public static String getFileSeparator() {
-		return System.getProperty("file.separator");
-	}
-	
+	/**
+	 * Returns the name of the operating system.
+	 * 
+	 * @return The name of the operating system.
+	 */
 	public static String getOperatingSystem() {
 		return System.getProperty("os.name");
 	}
 	
+	/**
+	 * Returns a String of the users home directory.
+	 * 
+	 * @return The String of the users home directory.
+	 */
 	public static String getUserHome() {
 		return System.getProperty("user.home");
 	}
 	
-	public static void initializeIntegerSpinner(Spinner<Integer> spinner) {
-		initializeIntegerSpinner(spinner, 0, Integer.MAX_VALUE, 0);
-	}
-	
-	public static void initializeIntegerSpinner(Spinner<Integer> spinner, int min) {
-		initializeIntegerSpinner(spinner, min, Integer.MAX_VALUE, min);
-	}
-	
-	public static void initializeIntegerSpinner(Spinner<Integer> spinner, int min, int max, int initialValue) {
-		IntegerSpinnerValueFactory factory = new IntegerSpinnerValueFactory(min, max, initialValue);
-		spinner.setValueFactory(factory);
-		
-		UnaryOperator<TextFormatter.Change> filter = (change) -> {
-			try {
-				Integer.parseInt(change.getControlNewText());
-				return change;
-			} catch ( NumberFormatException e ) {
-				return null;
-			}
-		};
-		TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter(), initialValue, filter);
-		spinner.getEditor().setTextFormatter(formatter);
-	}
-	
+	/**
+	 * Returns true if the operating system is Linux.
+	 * 
+	 * @return True if the operating system is Linux. Otherwise false.
+	 */
 	public static boolean isLinux() {
 		return Utils.getOperatingSystem().toLowerCase().contains("linux");
 	}
 	
+	/**
+	 * Returns true if the operating system is MacOS.
+	 * 
+	 * @return True if the operating system is MacOS. Otherwise false.
+	 */
 	public static boolean isMac() {
 		return Utils.getOperatingSystem().toLowerCase().contains("mac") || Utils.getOperatingSystem().toLowerCase().contains("darwin");
 	}
 	
+	/**
+	 * Returns true if the operating system is Windows.
+	 * 
+	 * @return True if the operating system is Windows. Otherwise false.
+	 */
 	public static boolean isWindows() {
 		return Utils.getOperatingSystem().toLowerCase().contains("win");
 	}
 	
-	public static <T> T loadFXML(final Object controller) throws IOException {
-		Class<?> clazz = controller.getClass();
-		URL url = clazz.getResource(clazz.getSimpleName()+".fxml");
-		return Utils.loadFXML(url, controller);
-	}
-	
-	public static <T> T loadFXML(final URL url, final Object controller) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setController(controller);
-		loader.setLocation(url);
-		
-		return loader.load();
-	}
-	
-	public static <T> T loadFXMLAsRoot(final Object controller) throws IOException {
-		Class<?> clazz = controller.getClass();
-		URL url = clazz.getResource(clazz.getSimpleName()+".fxml");
-		return Utils.loadFXMLAsRoot(url, controller);
-	}
-	
-	public static <T> T loadFXMLAsRoot(final URL url, final Object controller) throws IOException {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setController(controller);
-		loader.setLocation(url);
-		loader.setRoot(controller);
-		
-		return loader.load();
-	}
-	
+	/**
+	 * Load "/logging.properties" file into the LogManager.
+	 * The file must be exist in the root of the classpath.
+	 * 
+	 * @throws IOException If the file could not be found.
+	 */
 	public static void loadLoggingProperties() throws IOException {
 		loadLoggingProperties("/logging.properties");
 	}
 	
+	/**
+	 * Load a properties file into the LogManager.
+	 * 
+	 * @param resource The path to the properties file.
+	 * @throws IOException If the file could not be found.
+	 */
 	public static void loadLoggingProperties(String resource) throws IOException {
 		if ( System.getProperty("java.util.logging.config.file") != null ) {
 			return;
@@ -122,8 +107,14 @@ public class Utils {
 		LogManager.getLogManager().readConfiguration(url.openStream());
 	}
 	
-	public static String toTitleCase(String currentName) {
-		char[] buffer = currentName.toCharArray();
+	/**
+	 * Converts a String to Start Case.
+	 * 
+	 * @param string The String to be converted.
+	 * @return The String converted to Start Case.
+	 */
+	public static String toStartCase(String string) {
+		char[] buffer = string.toCharArray();
 		
 		boolean convert = false;
 		for ( int i=0; i<buffer.length; i++ ) {
